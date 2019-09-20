@@ -1,0 +1,24 @@
+service:
+  name: cloud-chat
+
+plugins:
+  - serverless-webpack
+
+provider:
+  name: aws
+  stage: dev
+  region: ap-southeast-2
+  runtime: nodejs10.x
+  websocketsApiName: ${self:provider.stage}-cloud-chat-api
+  websocketApiRouteSelectionExpression: $request.body.action
+
+functions:
+  manageConnection:
+    handler: src/manageConnection.handler
+    events:
+      - websocket: $connect
+      - websocket: $disconnect
+  chatMessage:
+    handler: src/chatMessage.handler
+    events:
+      - websocket: $default
