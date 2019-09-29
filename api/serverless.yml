@@ -3,6 +3,7 @@ service:
 
 plugins:
   - serverless-webpack
+  - serverless-offline
 
 provider:
   name: aws
@@ -18,7 +19,7 @@ functions:
     events:
       - websocket: $connect
       - websocket: $disconnect
-  chatMessage:
-    handler: src/chatMessage.handler
+  defaultHandler:
+    handler: src/defaultHandler.handler
     events:
       - websocket: $default
