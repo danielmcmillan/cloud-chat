@@ -1,0 +1,22 @@
+# References to resources for use in other configuration
+references:
+  tableName: ${self:custom.serviceId}
+  getTableArn:
+    Fn::GetAtt:
+      - DynamoDBTable
+      - Arn
+
+Resources:
+  DynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: ${self:custom.references.tableName}
+      AttributeDefinitions:
+        - AttributeName: pk
+          AttributeType: S
+      KeySchema:
+        - AttributeName: pk
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1

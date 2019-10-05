@@ -1,0 +1,10 @@
+# Role statements for the lambda execution role
+- Effect: Allow
+  Action:
+    - dynamodb:Scan
+    - dynamodb:Query
+    - dynamodb:GetItem
+    - dynamodb:PutItem
+    - dynamodb:UpdateItem
+    - dynamodb:DeleteItem
+  Resource: ${self:custom.references.getTableArn}

@@ -1,0 +1,2 @@
+# Environment variables available to lambda functions
+TABLE_NAME: ${self:custom.references.tableName}

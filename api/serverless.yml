@@ -3,7 +3,22 @@ service:
 
 plugins:
   - serverless-webpack
+  - serverless-dynamodb-local
   - serverless-offline
+
+custom:
+  dynamodb:
+    start:
+      migrate: true
+    stages:
+      - dev
+  webpack:
+    packager: yarn
+    includeModules:
+      forceExclude:
+        - aws-sdk
+  serviceId: ${self:service.name}-${self:provider.stage}
+  references: ${file(../serverless/resources.yml):references}
 
 provider:
   name: aws
@@ -12,14 +27,10 @@ provider:
   runtime: nodejs10.x
   websocketsApiName: ${self:provider.stage}-cloud-chat-api
   websocketApiRouteSelectionExpression: $request.body.action
+  iamRoleStatements: ${file(../serverless/role.yml)}
+  environment: ${file(../serverless/environment.yml)}
 
-functions:
-  manageConnection:
-    handler: src/manageConnection.handler
-    events:
-      - websocket: $connect
-      - websocket: $disconnect
-  defaultHandler:
-    handler: src/defaultHandler.handler
-    events:
-      - websocket: $default
+functions: ${file(../serverless/functions.yml)}
+
+resources:
+  Resources: ${file(../serverless/resources.yml):Resources}

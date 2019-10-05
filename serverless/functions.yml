@@ -1,0 +1,13 @@
+onConnect:
+  handler: src/onConnect.handler
+  events:
+    - websocket:
+        route: $connect
+    - websocket:
+        route: $disconnect
+
+onDefault:
+  handler: src/onDefault.handler
+  events:
+    - websocket:
+        route: $default
