@@ -17,8 +17,9 @@ custom:
     includeModules:
       forceExclude:
         - aws-sdk
+        - aws-lambda
   serviceId: ${self:service.name}-${self:provider.stage}
-  references: ${file(../serverless/resources.yml):references}
+  references: ${file(./serverless/resources.yml):references}
 
 provider:
   name: aws
@@ -27,10 +28,10 @@ provider:
   runtime: nodejs10.x
   websocketsApiName: ${self:provider.stage}-cloud-chat-api
   websocketApiRouteSelectionExpression: $request.body.action
-  iamRoleStatements: ${file(../serverless/role.yml)}
-  environment: ${file(../serverless/environment.yml)}
+  iamRoleStatements: ${file(./serverless/role.yml)}
+  environment: ${file(./serverless/environment.yml)}
 
-functions: ${file(../serverless/functions.yml)}
+functions: ${file(./serverless/functions.yml)}
 
 resources:
-  Resources: ${file(../serverless/resources.yml):Resources}
+  Resources: ${file(./serverless/resources.yml):Resources}

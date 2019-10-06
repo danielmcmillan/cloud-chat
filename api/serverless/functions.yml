@@ -1,13 +1,11 @@
 onConnect:
-  handler: src/onConnect.handler
+  handler: src/handler/connection/onConnect.handler
   events:
     - websocket:
         route: $connect
-    - websocket:
-        route: $disconnect
 
 onDefault:
-  handler: src/onDefault.handler
+  handler: src/handler/message/default.handler
   events:
     - websocket:
         route: $default
