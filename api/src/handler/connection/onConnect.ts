@@ -1,6 +1,7 @@
-import * as AWS from "aws-sdk";
 import { APIGatewayProxyHandler } from "aws-lambda";
 import "source-map-support/register";
+import { dynamodbDocumentClient as dynamodb } from "../../aws";
+import { config } from "../../config";
 
 export const handler: APIGatewayProxyHandler = async (event, _context) => {
   const { connectionId } = event.requestContext;
@@ -11,17 +12,10 @@ export const handler: APIGatewayProxyHandler = async (event, _context) => {
   }
 
   // Test put in Dynamodb
-  const options = process.env.IS_OFFLINE
-    ? {
-        region: "localhost",
-        endpoint: "http://localhost:8000",
-      }
-    : undefined;
-  const dc = new AWS.DynamoDB.DocumentClient(options);
   try {
-    await dc
+    await dynamodb
       .put({
-        TableName: process.env.TABLE_NAME,
+        TableName: config.tableName,
         Item: {
           pk: connectionId,
         },
@@ -34,6 +28,6 @@ export const handler: APIGatewayProxyHandler = async (event, _context) => {
 
   return {
     statusCode: 200,
-    body: ''
+    body: "",
   };
 };

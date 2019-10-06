@@ -1,2 +1,5 @@
 # Environment variables available to lambda functions
+STAGE: ${self:custom.stage}
+REGION: ${self:custom.region}
 TABLE_NAME: ${self:custom.references.tableName}
+API_ID: !Ref "WebsocketsApi"

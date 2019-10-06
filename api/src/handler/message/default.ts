@@ -1,36 +1,25 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
-import * as AWS from "aws-sdk";
 import "source-map-support/register";
+import {
+  apiGatewayManagementApi as apiGateway,
+  dynamodbDocumentClient as dynamodb,
+} from "../../aws";
+import { config } from "../../config";
 
 export const handler: APIGatewayProxyHandler = async (event, _context) => {
-  const dbOptions = process.env.IS_OFFLINE
-    ? {
-        region: "localhost",
-        endpoint: "http://localhost:8000",
-      }
-    : undefined;
-  const dc = new AWS.DynamoDB.DocumentClient(dbOptions);
-  const table = await dc
+  const table = await dynamodb
     .scan({
-      TableName: process.env.TABLE_NAME,
+      TableName: config.tableName,
     })
     .promise();
-  const gwOptions = process.env.IS_OFFLINE
-    ? {
-        region: "localhost",
-        endpoint: "http://localhost:3001",
-      }
-    : {
-        endpoint: `${event.requestContext.domainName}/${event.requestContext.stage}`,
-      };
-  const apigw = new AWS.ApiGatewayManagementApi(gwOptions);
+
   const data = JSON.parse(event.body).data;
 
   const promises = table.Items.map(async (item) => {
     const connectionId = item.pk;
     try {
       console.debug(`Echoing to connection ${connectionId}`);
-      await apigw
+      await apiGateway
         .postToConnection({
           ConnectionId: connectionId,
           Data: data,

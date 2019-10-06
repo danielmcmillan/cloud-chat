@@ -6,6 +6,16 @@ plugins:
   - serverless-dynamodb-local
   - serverless-offline
 
+provider:
+  name: aws
+  stage: dev
+  region: ap-southeast-2
+  runtime: nodejs10.x
+  websocketsApiName: ${self:custom.serviceId}-api
+  websocketApiRouteSelectionExpression: $request.body.action
+  iamRoleStatements: ${file(./serverless/role.yml)}
+  environment: ${file(./serverless/environment.yml)}
+
 custom:
   dynamodb:
     start:
@@ -18,18 +28,10 @@ custom:
       forceExclude:
         - aws-sdk
         - aws-lambda
-  serviceId: ${self:service.name}-${self:provider.stage}
+  stage: ${opt:stage, self:provider.stage}
+  region: ${opt:region, self:provider.region}
+  serviceId: ${self:service.name}-${self:custom.stage}
   references: ${file(./serverless/resources.yml):references}
-
-provider:
-  name: aws
-  stage: dev
-  region: ap-southeast-2
-  runtime: nodejs10.x
-  websocketsApiName: ${self:provider.stage}-cloud-chat-api
-  websocketApiRouteSelectionExpression: $request.body.action
-  iamRoleStatements: ${file(./serverless/role.yml)}
-  environment: ${file(./serverless/environment.yml)}
 
 functions: ${file(./serverless/functions.yml)}
 
