@@ -1,22 +1,14 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
 import "source-map-support/register";
-import {
-  apiGatewayManagementApi as apiGateway,
-  dynamodbDocumentClient as dynamodb,
-} from "../../aws";
-import { config } from "../../config";
+import { apiGatewayManagementApi as apiGateway } from "../../aws";
+import * as Subscription from "../../model/subscription";
 
 export const handler: APIGatewayProxyHandler = async (event, _context) => {
-  const table = await dynamodb
-    .scan({
-      TableName: config.tableName,
-    })
-    .promise();
-
+  const subscriptions = await Subscription.getSubscriptionsForRoom("room");
   const data = JSON.parse(event.body).data;
 
-  const promises = table.Items.map(async (item) => {
-    const connectionId = item.pk;
+  const promises = subscriptions.map(async (subscription) => {
+    const { connectionId } = subscription;
     try {
       console.debug(`Echoing to connection ${connectionId}`);
       await apiGateway

@@ -433,6 +433,13 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.14.18.tgz#b7d45fc950e6ffd7edc685e890d13aa7b8535dce"
   integrity sha512-ryO3Q3++yZC/+b8j8BdKd/dn9JlzlHBPdm80656xwYUdmPkpTGTjkAdt6BByiNupGPE8w0FhBgvYy/fX9hRNGQ==
 
+"@types/ramda@^0.26.26":
+  version "0.26.26"
+  resolved "https://registry.yarnpkg.com/@types/ramda/-/ramda-0.26.26.tgz#cf5c2fa9bfbae8f81be7dfaa19e08d31452f5e4b"
+  integrity sha512-jDx2Lp2WvziMTcDxOU21yzRr6jP/VTWvpg6SQxeM63VldSjugUY1N9p1Q8YY/wpGvqzpkstUFmg2oGJdBSp5gg==
+  dependencies:
+    ts-toolbelt "^4.7.7"
+
 "@webassemblyjs/ast@1.8.5":
   version "1.8.5"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.8.5.tgz#51b1c5fe6576a34953bf4b253df9f0d490d9e359"
@@ -5713,6 +5720,11 @@ ts-node@^3.2.0:
     tsconfig "^6.0.0"
     v8flags "^3.0.0"
     yn "^2.0.0"
+
+ts-toolbelt@^4.7.7:
+  version "4.8.4"
+  resolved "https://registry.yarnpkg.com/ts-toolbelt/-/ts-toolbelt-4.8.4.tgz#110b13a6803c020c66345b6105e2208620069040"
+  integrity sha512-Ih+y5GEsOlYugftG+Bk8ocE2bfobbSiJGGWeds4v+M3pEh/2QivzrU0VY6D3lztpv7OHYQ521xHVi8pZmJYBbA==
 
 tsconfig@^6.0.0:
   version "6.0.0"

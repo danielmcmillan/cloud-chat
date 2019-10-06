@@ -60,9 +60,9 @@ The room must have already been subscribed to.
 
 ```typescript
 interface ISendMessageAction {
-  action: "sendMessage",
-  roomName: "<room_name>",
-  message: "<message_text>"
+  action: "sendMessage";
+  roomName: "<room_name>";
+  message: "<message_text>";
 }
 ```
 
@@ -74,7 +74,7 @@ Request the list of active rooms.
 
 ```typescript
 interface ISendMessageAction {
-  action: "listRooms"
+  action: "listRooms";
 }
 ```
 
@@ -97,7 +97,7 @@ interface IErrorMessage {
 
 enum ErrorCode {
   BAD_REQUEST = 400, // message format was incorrect or action invalid
-  SERVER_ERROR = 500
+  SERVER_ERROR = 500,
 }
 ```
 
@@ -167,22 +167,28 @@ interface IUserSubscribedMessage {
 ### Queries
 
 - Broadcast to a room: get all connections by room name
-  - `{pk: "Subscription|<room_name>"}`
 
-- Get user names by room name
   - `{pk: "Subscription|<room_name>"}`
-
-- Get messages for a room ordered by time
-  - `{pk: "Message|<room_name>"}`, limit to *x*
 
 - Get name for incoming message: lookup user name by room name and connection id
+
   - `{pk: "Subscription|<room_name>", sk: "<connection_id>"}`
 
-- Get/delete subscriptions for a given connection_id
+- Get user names by room name
+
+  - `{pk: "Subscription|<room_name>"}`
+
+- Delete subscriptions for a given connection_id
+
   - GSI: `{data: "<connection_id>"}` to get rooms
   - for each room name `{pk: "Subscription|<room_name>", sk: "<connection_id>"}`
 
+- Get messages for a room ordered by time
+
+  - `{pk: "Message|<room_name>"}`, limit to _x_
+
 - Get messages for a user grouped by room and ordered by time
+
   - GSI: `{data: "<user_name>"}`
 
 - Get list of active room names
@@ -195,6 +201,7 @@ Partition key: "pk"
 Sort key: "sk"
 
 #### Rooms
+
 ```json
 {
   "pk": "Room",

@@ -10,11 +10,13 @@
   "dependencies": {
     "aws-lambda": "^0.1.2",
     "aws-sdk": "^2.543.0",
+    "ramda": "^0.26.1",
     "source-map-support": "^0.5.10"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.17",
     "@types/node": "^10.12.18",
+    "@types/ramda": "^0.26.26",
     "serverless": "^1.53.0",
     "serverless-dynamodb-local": "^0.2.38",
     "serverless-offline": "^5.11.0",
