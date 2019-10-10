@@ -32,7 +32,7 @@ export class KeyConverter<T extends Record<string, any>, A extends keyof T = key
   /**
    * Build a key attribute from an item base on config.
    * @param {KeyAttribute} keyAttribute The database record key attribute to build.
-   * @param {Partial<T>} item Object with atleast the properties of T required to build the key.
+   * @param {Partial<T>} item Object with at least the properties of T required to build the key.
    * @returns {string} the value for the key.
    */
   public makeKey = (keyAttribute: KeyAttribute, item: Partial<T>): string =>
