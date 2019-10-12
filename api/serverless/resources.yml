@@ -16,6 +16,8 @@ Resources:
           AttributeType: S
         - AttributeName: sk
           AttributeType: S
+        - AttributeName: data
+          AttributeType: S
       KeySchema:
         - AttributeName: pk
           KeyType: HASH
