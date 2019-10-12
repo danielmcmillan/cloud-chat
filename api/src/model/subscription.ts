@@ -42,22 +42,17 @@ export const getSubscription = async (
   return converter.unmarshallItem(result.Item);
 };
 
-export const deleteSubscription = async (
-  roomName: string,
-  connectionId: string,
-): Promise<ISubscription> => {
-  const result = await dynamodb
+export const deleteSubscription = async (roomName: string, connectionId: string): Promise<void> => {
+  await dynamodb
     .delete({
       TableName: config.tableName,
       Key: {
         pk: converter.makeKey("pk", { roomName }),
         sk: converter.makeKey("sk", { connectionId }),
       },
-      ReturnValues: "ALL_OLD",
+      ReturnValues: "NONE",
     })
     .promise();
-
-  return converter.unmarshallItem(result.Attributes);
 };
 
 export const getSubscriptionsForRoom = async (roomName: string): Promise<ISubscription[]> => {

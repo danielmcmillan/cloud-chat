@@ -79,9 +79,9 @@ describe("subscription model", () => {
           pk: { mock_pk: { roomName: mockSubscription.roomName } },
           sk: { mock_sk: { connectionId: mockSubscription.connectionId } },
         },
-        ReturnValues: "ALL_OLD",
+        ReturnValues: "NONE",
       });
-      expect(result).toEqual({ mockUnmarshalled: mockSubscription });
+      expect(result).toBeUndefined();
     });
   });
 
