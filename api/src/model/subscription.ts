@@ -8,83 +8,95 @@ export interface ISubscription {
   userName: string;
 }
 
+const dataSkIndex = "DataSkIndex";
 const converter = new KeyConverter<ISubscription>({
   pk: [{ literal: "Subscription" }, { attribute: "roomName" }],
-  sk: [{ attribute: "connectionId" }],
+  sk: [{ attribute: "roomName" }, { attribute: "connectionId" }],
   data: [{ attribute: "connectionId" }],
 });
 
-export const createSubscription = async (params: ISubscription): Promise<ISubscription> => {
-  await dynamodb
-    .put({
-      TableName: config.tableName,
-      Item: converter.marshallItem(params),
-    })
-    .promise();
+export class Subscription {
+  public static async createSubscription(params: ISubscription): Promise<ISubscription> {
+    await dynamodb
+      .put({
+        TableName: config.tableName,
+        Item: converter.marshallItem(params),
+      })
+      .promise();
 
-  return params;
-};
+    return params;
+  }
 
-export const getSubscription = async (
-  roomName: string,
-  connectionId: string,
-): Promise<ISubscription> => {
-  const result = await dynamodb
-    .get({
-      TableName: config.tableName,
-      Key: {
-        pk: converter.makeKey("pk", { roomName }),
-        sk: converter.makeKey("sk", { connectionId }),
-      },
-    })
-    .promise();
+  public static async getSubscription(
+    roomName: string,
+    connectionId: string,
+  ): Promise<ISubscription> {
+    const result = await dynamodb
+      .get({
+        TableName: config.tableName,
+        Key: {
+          pk: converter.makeKey("pk", { roomName }),
+          sk: converter.makeKey("sk", { connectionId }),
+        },
+      })
+      .promise();
 
-  return converter.unmarshallItem(result.Item);
-};
+    return converter.unmarshallItem(result.Item);
+  }
 
-export const deleteSubscription = async (roomName: string, connectionId: string): Promise<void> => {
-  await dynamodb
-    .delete({
-      TableName: config.tableName,
-      Key: {
-        pk: converter.makeKey("pk", { roomName }),
-        sk: converter.makeKey("sk", { connectionId }),
-      },
-      ReturnValues: "NONE",
-    })
-    .promise();
-};
+  public static async deleteSubscription(roomName: string, connectionId: string): Promise<void> {
+    await dynamodb
+      .delete({
+        TableName: config.tableName,
+        Key: {
+          pk: converter.makeKey("pk", { roomName }),
+          sk: converter.makeKey("sk", { connectionId }),
+        },
+        ReturnValues: "NONE",
+      })
+      .promise();
+  }
 
-export const getSubscriptionsForRoom = async (roomName: string): Promise<ISubscription[]> => {
-  const result = await dynamodb
-    .query({
-      TableName: config.tableName,
-      KeyConditionExpression: "pk = :pk",
-      ExpressionAttributeValues: { ":pk": converter.makeKey("pk", { roomName }) },
-    })
-    .promise();
+  public static async getSubscriptionsForRoom(roomName: string): Promise<ISubscription[]> {
+    const result = await dynamodb
+      .query({
+        TableName: config.tableName,
+        KeyConditionExpression: "pk = :pk",
+        ExpressionAttributeValues: { ":pk": converter.makeKey("pk", { roomName }) },
+      })
+      .promise();
 
-  return result.Items.map(converter.unmarshallItem);
-};
+    return result.Items.map(converter.unmarshallItem);
+  }
 
-export const getSubscriptionsForConnection = async (
-  connectionId: string,
-): Promise<ISubscription[]> => {
-  // const result = await dynamodb
-  //   .query({
-  //     TableName: config.tableName,
-  //     IndexName: "index",
-  //     KeyConditionExpression: "sk = :sk",
-  //     ExpressionAttributeValues: { ":sk": converter.makeKey("sk", { connectionId }) },
-  //   })
-  //   .promise();
+  public static async getSubscriptionsForConnection(
+    connectionId: string,
+  ): Promise<ISubscription[]> {
+    const result = await dynamodb
+      .query({
+        TableName: config.tableName,
+        IndexName: dataSkIndex,
+        ExpressionAttributeNames: {
+          "#data": "data",
+        },
+        ExpressionAttributeValues: { ":data": converter.makeKey("data", { connectionId }) },
+        KeyConditionExpression: "#data = :data",
+      })
+      .promise();
 
-  // return result.Items.map(converter.unmarshallItem);
-  return [];
-};
+    return result.Items.map(converter.unmarshallItem);
+  }
 
-export const deleteSubscriptionsForConnection = async (
-  connectionId: string,
-): Promise<ISubscription[]> => {
-  return [];
-};
+  public static async deleteSubscriptionsForConnection(
+    connectionId: string,
+  ): Promise<ISubscription[]> {
+    const subscriptions = await Subscription.getSubscriptionsForConnection(connectionId);
+    await Promise.all(
+      subscriptions.map((subscription) => {
+        return Subscription.deleteSubscription(subscription.roomName, subscription.connectionId);
+      }),
+    );
+
+    return subscriptions;
+  }
+}

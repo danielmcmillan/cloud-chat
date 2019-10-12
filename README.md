@@ -172,7 +172,7 @@ interface IUserSubscribedMessage {
 
 - Get name for incoming message: lookup user name by room name and connection id
 
-  - `{pk: "Subscription|<room_name>", sk: "<connection_id>"}`
+  - `{pk: "Subscription|<room_name>", sk: "<room_name>|<connection_id>"}`
 
 - Get user names by room name
 
@@ -181,7 +181,7 @@ interface IUserSubscribedMessage {
 - Delete subscriptions for a given connection_id
 
   - GSI: `{data: "<connection_id>"}` to get rooms
-  - for each room name `{pk: "Subscription|<room_name>", sk: "<connection_id>"}`
+  - for each room name `{pk: "Subscription|<room_name>", sk: "<room_name>|<connection_id>"}`
 
 - Get messages for a room ordered by time
 
@@ -215,7 +215,7 @@ Sort key: "sk"
 ```json
 {
   "pk": "Subscription|<room_name>",
-  "sk": "<connection_id>",
+  "sk": "<room_name>|<connection_id>",
   "data": "<connection_id>",
   "userName": "<user_name>"
 }
