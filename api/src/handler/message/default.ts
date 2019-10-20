@@ -1,7 +1,7 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
 import "source-map-support/register";
 import { apiGatewayManagementApi as apiGateway } from "../../aws";
-import * as Subscription from "../../model/subscription";
+import { Subscription } from "../../db/subscription";
 
 export const handler: APIGatewayProxyHandler = async (event, _context) => {
   const subscriptions = await Subscription.getSubscriptionsForRoom("room");

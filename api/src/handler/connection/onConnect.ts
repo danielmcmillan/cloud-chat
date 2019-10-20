@@ -1,6 +1,6 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
 import "source-map-support/register";
-import * as Subscription from "../../model/subscription";
+import { Subscription } from "../../db/subscription";
 
 export const handler: APIGatewayProxyHandler = async (event, _context) => {
   const { connectionId } = event.requestContext;

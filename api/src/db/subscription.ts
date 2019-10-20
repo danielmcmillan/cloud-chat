@@ -1,6 +1,6 @@
 import { dynamodbDocumentClient as dynamodb } from "../aws";
 import { config } from "../config";
-import { KeyConverter } from "../db/KeyConverter";
+import { KeyConverter } from "./KeyConverter";
 
 export interface ISubscription {
   roomName: string;
