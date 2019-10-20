@@ -72,7 +72,7 @@ export class KeyConverter<T extends Record<string, any>, A extends keyof T = key
    */
   public marshallItem = (item: T): Record<string, any> => {
     // Start with the item with any attribute that appears in a key omitted
-    const record = R.omit(this.attributesInKeys, item);
+    const record: Record<string, any> = R.omit(this.attributesInKeys, item);
 
     // Build the value for each key based on the configuration and set on record
     keyAttributes.forEach((keyAttribute) => {

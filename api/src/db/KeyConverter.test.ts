@@ -1,4 +1,4 @@
-import { KeyConverter } from "./KeyConverter";
+import { KeyConverter, EntityConfig } from "./KeyConverter";
 
 describe("KeyConverter", () => {
   const mockItem = {
@@ -6,7 +6,7 @@ describe("KeyConverter", () => {
     name: "A",
   };
 
-  const getConverter = (config?) =>
+  const getConverter = (config?: Partial<EntityConfig<"id" | "name" | "data">>) =>
     new KeyConverter({
       pk: [],
       sk: [],

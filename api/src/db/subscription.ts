@@ -30,7 +30,7 @@ export class Subscription {
   public static async getSubscription(
     roomName: string,
     connectionId: string,
-  ): Promise<ISubscription> {
+  ): Promise<ISubscription | undefined> {
     const result = await dynamodb
       .get({
         TableName: config.tableName,
@@ -41,7 +41,7 @@ export class Subscription {
       })
       .promise();
 
-    return converter.unmarshallItem(result.Item);
+    return result.Item ? converter.unmarshallItem(result.Item) : undefined;
   }
 
   public static async deleteSubscription(roomName: string, connectionId: string): Promise<void> {
@@ -66,7 +66,7 @@ export class Subscription {
       })
       .promise();
 
-    return result.Items.map(converter.unmarshallItem);
+    return (result.Items || []).map(converter.unmarshallItem);
   }
 
   public static async getSubscriptionsForConnection(
@@ -84,7 +84,7 @@ export class Subscription {
       })
       .promise();
 
-    return result.Items.map(converter.unmarshallItem);
+    return (result.Items || []).map(converter.unmarshallItem);
   }
 
   public static async deleteSubscriptionsForConnection(
