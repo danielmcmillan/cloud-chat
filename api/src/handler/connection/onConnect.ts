@@ -1,15 +1,8 @@
-import { APIGatewayProxyHandler } from "aws-lambda";
 import "source-map-support/register";
 import { Subscription } from "../../db/subscription";
+import { createWebsocketHandler } from "../createWebsocketHandler";
 
-export const handler: APIGatewayProxyHandler = async (event, _context) => {
-  const { connectionId } = event.requestContext;
-  if (connectionId) {
-    console.debug(`Connection id: ${connectionId}`);
-  } else {
-    console.debug("No connection id");
-  }
-
+export const handler = createWebsocketHandler(async ({ connectionId }) => {
   try {
     await Subscription.createSubscription({
       connectionId,
@@ -20,9 +13,4 @@ export const handler: APIGatewayProxyHandler = async (event, _context) => {
   } catch (err) {
     console.error(`Failed to put in db: ${err.message}`);
   }
-
-  return {
-    statusCode: 200,
-    body: "",
-  };
-};
+});

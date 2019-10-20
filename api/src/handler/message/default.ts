@@ -1,11 +1,14 @@
-import { APIGatewayProxyHandler } from "aws-lambda";
 import "source-map-support/register";
 import { apiGatewayManagementApi as apiGateway } from "../../aws";
 import { Subscription } from "../../db/subscription";
+import { createWebsocketHandler } from "../createWebsocketHandler";
 
-export const handler: APIGatewayProxyHandler = async (event, _context) => {
+interface Payload {
+  data: any;
+}
+
+export const handler = createWebsocketHandler<Payload>(async ({ payload }) => {
   const subscriptions = await Subscription.getSubscriptionsForRoom("room");
-  const data = JSON.parse(event.body).data;
 
   const promises = subscriptions.map(async (subscription) => {
     const { connectionId } = subscription;
@@ -14,7 +17,7 @@ export const handler: APIGatewayProxyHandler = async (event, _context) => {
       await apiGateway
         .postToConnection({
           ConnectionId: connectionId,
-          Data: data,
+          Data: payload.data,
         })
         .promise();
     } catch (err) {
@@ -31,9 +34,4 @@ export const handler: APIGatewayProxyHandler = async (event, _context) => {
     }
   });
   await Promise.all(promises);
-
-  return {
-    statusCode: 200,
-    body: "",
-  };
-};
+});
