@@ -1,11 +1,15 @@
 import "source-map-support/register";
 import { apiGatewayManagementApi as apiGateway } from "../../aws";
 import { Subscription } from "../../db/subscription";
-import { createWebsocketHandler } from "../createWebsocketHandler";
+import { createWebsocketHandler, PayloadValidator } from "../createWebsocketHandler";
 
 interface Payload {
   data: any;
 }
+
+const validator: PayloadValidator = (payload) => ({
+  error: typeof payload.data === "string" ? undefined : "data must be a string",
+});
 
 export const handler = createWebsocketHandler<Payload>(async ({ payload }) => {
   const subscriptions = await Subscription.getSubscriptionsForRoom("room");
@@ -34,4 +38,4 @@ export const handler = createWebsocketHandler<Payload>(async ({ payload }) => {
     }
   });
   await Promise.all(promises);
-});
+}, validator);
