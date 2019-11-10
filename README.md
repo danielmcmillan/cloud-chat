@@ -14,10 +14,10 @@ interface IAction {
 }
 
 interface IMessage {
-  type: string;
+  action: string;
 }
 
-interface IMessage {
+interface IChatMessage {
   userName: string;
   message: string;
   time: number;
@@ -33,7 +33,8 @@ Subscribe to a room.
 ```typescript
 interface ISubscribeAction {
   action: "subscribe";
-  roomName: "[a-zA-Z0-9-_ *.]+"; // support unicode?
+  roomName: string;
+  userName: string;
 }
 ```
 
@@ -119,7 +120,7 @@ interface IRoomStateMessage {
 Sent when there is a new message in any subscribed room.
 
 ```typescript
-interface IUserSubscribedMessage {
+interface IMessageReceivedMessage {
   type: "newMessage";
   roomName: "<room_name>";
   message: IMessage;

@@ -9,3 +9,15 @@ onDefault:
   events:
     - websocket:
         route: $default
+
+subscribe:
+  handler: src/handler/message/subscribe.handler
+  events:
+    - websocket:
+        route: subscribe
+
+sendMessage:
+  handler: src/handler/message/sendMessage.handler
+  events:
+    - websocket:
+        route: sendMessage

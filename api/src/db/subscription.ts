@@ -36,7 +36,7 @@ export class Subscription {
         TableName: config.tableName,
         Key: {
           pk: converter.makeKey("pk", { roomName }),
-          sk: converter.makeKey("sk", { connectionId }),
+          sk: converter.makeKey("sk", { roomName, connectionId }),
         },
       })
       .promise();
@@ -50,7 +50,7 @@ export class Subscription {
         TableName: config.tableName,
         Key: {
           pk: converter.makeKey("pk", { roomName }),
-          sk: converter.makeKey("sk", { connectionId }),
+          sk: converter.makeKey("sk", { roomName, connectionId }),
         },
         ReturnValues: "NONE",
       })
