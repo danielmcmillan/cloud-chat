@@ -10,7 +10,7 @@
     "debug": "node --inspect ./node_modules/.bin/serverless offline start"
   },
   "dependencies": {
-    "aws-lambda": "^0.1.2",
+    "aws-lambda": "^1.0.5",
     "aws-sdk": "^2.543.0",
     "ramda": "^0.26.1",
     "source-map-support": "^0.5.10"
